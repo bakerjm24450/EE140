@@ -14,7 +14,10 @@
                     "-o", "${relativeFileDirname}/build/${relativeFileDirname}.exe",
                     "-lsfml-graphics",
                     "-lsfml-window",
-                    "-lsfml-system"
+                    "-lsfml-system",
+                    "-lOpenGL32",
+                    "-lComdlg32",
+                    "-lOle32"
                 ]
             },
             "osx": {
@@ -54,7 +57,7 @@
                 "GL_SILENCE_DEPRECATION",
                 "-g",
                 "-std=c++17",
-                "-I${workspaceFolder}/imgui",
+                "-I../../imgui",
                 "../*.cpp",
                 "../../imgui/*.cpp",
                 "-c",
@@ -75,7 +78,7 @@
             "args": [
                 "-D", "GL_SILENCE_DEPRECATION",
                 "-g",
-                "-I${workspaceFolder}/imgui",
+                "-I../../imgui",
                 "-x", "c", "../*.c",
                 "-x", "c", "../../imgui/*.c",
                 "-c",
