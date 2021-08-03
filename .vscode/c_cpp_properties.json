@@ -1,0 +1,40 @@
+{
+    "env": {
+      "myDefaultIncludePath": [
+        "${workspaceFolder}",
+        "${workspaceFolder}/imgui"
+      ]
+    },
+    "configurations": [
+      {
+        "name": "Win32",
+        "intelliSenseMode": "gcc-x64",
+        "includePath": ["${myDefaultIncludePath}"],
+        "cStandard": "c11",
+        "cppStandard": "c++17",
+        "browse": {
+          "path": ["${workspaceFolder}"],
+          "limitSymbolsToIncludedHeaders": true,
+          "databaseFilename": ""
+        }
+      },
+      {
+        "name": "Mac",
+        "intelliSenseMode": "clang-x64",
+        "includePath": ["${myDefaultIncludePath}"],
+        "macFrameworkPath": [
+          "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
+        ],
+        "cStandard": "c11",
+        "cppStandard": "c++17",
+        "browse": {
+          "path": ["${workspaceFolder}"],
+          "limitSymbolsToIncludedHeaders": true,
+          "databaseFilename": ""
+        }
+      }
+
+    ],
+    "version": 4
+  }
+  

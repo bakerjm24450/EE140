@@ -1,0 +1,34 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${fileDirname}/build/${relativeFileDirname}",
+            "windows": {
+                "program": "${fileDirname}/build/${relativeFileDirname}.exe",
+                "MIMode": "gdb",
+                "miDebuggerPath": "c:/msys64/mingw64/bin/gdb.exe",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for debugger",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    }
+                ]
+                },
+            "osx": {
+                "MIMode": "lldb",
+            },
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+        }
+    ]
+}
