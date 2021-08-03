@@ -34,5 +34,8 @@
 # build directory
 **/build
 
+# Mac-specific files
+.DS_Store
+
 # for using ImGui
 imgui.ini
