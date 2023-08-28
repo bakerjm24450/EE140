@@ -1,4 +1,4 @@
-# ee140
+# EE140
 
 This repository contains the files needed for the programming projects in EE 140 C Programming at VMI, including
 
