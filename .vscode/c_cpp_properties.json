@@ -8,7 +8,7 @@
     "configurations": [
       {
         "name": "Win32",
-        "intelliSenseMode": "gcc-x64",
+        "intelliSenseMode": "windows-gcc-x64",
         "includePath": ["${myDefaultIncludePath}"],
         "cStandard": "c11",
         "cppStandard": "c++17",
