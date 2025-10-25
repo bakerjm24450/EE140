@@ -1,6 +1,5 @@
-ImGui-SFML v2.3
-=======
-[![build Actions Status](https://github.com/eliasdaler/imgui-sfml/workflows/build/badge.svg)](https://github.com/eliasdaler/imgui-sfml/actions)
+ImGui-SFML
+==========
 
 Library which allows you to use [Dear ImGui](https://github.com/ocornut/imgui) with [SFML](https://github.com/SFML/SFML)
 
@@ -8,65 +7,57 @@ Library which allows you to use [Dear ImGui](https://github.com/ocornut/imgui) w
 
 Based on [this repository](https://github.com/Mischa-Alff/imgui-backends) with big improvements and changes.
 
+State of Development
+-----
+
+Development is focused on version 3 in the `master` branch.
+No more features are planned for the 2.x release series.
+
 Dependencies
 -----
 
-* [SFML](https://github.com/SFML/SFML) >= 2.5.0
-* [Dear ImGui](https://github.com/ocornut/imgui) >= 1.80
+* [SFML](https://github.com/SFML/SFML) >= 3.0.0
+* [Dear ImGui](https://github.com/ocornut/imgui) >= 1.91.1, < 1.92.0
 
 Contributing
 -----
 
-* The code is written in C++03. See [#7](https://github.com/eliasdaler/imgui-sfml/issues/7)
+* The code is written in C++17 (SFML 3 uses C++17, Dear ImGui has started using C++11 since 2022)
 * The code should be formatted via [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) using `.clang-format` provided in the root of this repository
 
 How-to
 ----
 
-- [**Detailed tutorial on my blog**](https://eliasdaler.github.io/using-imgui-with-sfml-pt1)
-- [**Using ImGui with modern C++ and STL**](https://eliasdaler.github.io/using-imgui-with-sfml-pt2/)
+- [**CMake tutorial which also shows how to use ImGui-SFML with FetchContent**](https://edw.is/using-cmake/)
+- [**Example project which sets up ImGui-SFML with FetchContent**](https://github.com/eliasdaler/cmake-fetchcontent-tutorial-code)
+- [**Detailed tutorial on Elias Daler's blog**](https://edw.is/using-imgui-with-sfml-pt1)
+- [**Using ImGui with modern C++ and STL**](https://edw.is/using-imgui-with-sfml-pt2/)
 - [**Thread on SFML forums**](https://en.sfml-dev.org/forums/index.php?topic=20137.0). Feel free to ask your questions there.
 
 Building and integrating into your CMake project
 ---
+It's highly recommended to use FetchContent or git submodules to get SFML and Dear ImGui into your build.
 
-- [**CMake tutorial on my blog**](https://eliasdaler.github.io/using-cmake/)
+See [this file](https://github.com/eliasdaler/imgui-sfml-fetchcontent/blob/master/dependencies/CMakeLists.txt) - if you do something similar, you can then just link to ImGui-SFML as simply as:
 
-```sh
-cmake <ImGui-SFML repo folder> -DIMGUI_DIR=<ImGui repo folder> -DSFML_DIR=<path with built SFML>
-```
-
-If you have SFML installed on your system, you don't need to set SFML_DIR during
-configuration.
-
-You can also specify `BUILD_SHARED_LIBS=ON` to build ImGui-SFML as a shared library. To build ImGui-SFML examples, set `IMGUI_SFML_BUILD_EXAMPLES=ON`. To build imgui-demo.cpp (to be able to use `ImGui::ShowDemoWindow`), set `IMGUI_SFML_IMGUI_DEMO=ON`.
-
-After the building, you can install the library on your system by running:
-```sh
-cmake --build . --target install
-```
-
-If you set `CMAKE_INSTALL_PREFIX` during configuration, you can install ImGui-SFML locally.
-
-Integrating into your project is simple.
 ```cmake
-find_package(ImGui-SFML REQUIRED)
-target_link_libraries(my_target PRIVATE ImGui-SFML::ImGui-SFML)
+target_link_libraries(game
+  PUBLIC
+    ImGui-SFML::ImGui-SFML
+)
 ```
-
-If CMake can't find ImGui-SFML on your system, just define `ImGui-SFML_DIR` before calling `find_package`.
 
 Integrating into your project manually
 ---
 - Download [ImGui](https://github.com/ocornut/imgui)
-- Add ImGui folder to your include directories
+- Add Dear ImGui folder to your include directories
 - Add `imgui.cpp`, `imgui_widgets.cpp`, `imgui_draw.cpp` and `imgui_tables.cpp` to your build/project
 - Copy the contents of `imconfig-SFML.h` to your `imconfig.h` file. (to be able to cast `ImVec2` to `sf::Vector2f` and vice versa)
 - Add a folder which contains `imgui-SFML.h` to your include directories
 - Add `imgui-SFML.cpp` to your build/project
 - Link OpenGL if you get linking errors
 
-Other ways to add to your project(won't recommend as the versions tend to lag behind and are not
+Other ways to add to your project
 ---
 Not recommended, as they're not maintained officially. Tend to lag behind and stay on older versions.
 
@@ -77,31 +68,31 @@ Not recommended, as they're not maintained officially. Tend to lag behind and st
 Using ImGui-SFML in your code
 ---
 
-- Call `ImGui::SFML::Init` and pass your `sf::Window` + `sf::RenderTarget` or `sf::RenderWindow` there. You can create your font atlas and pass the pointer in Init too, otherwise the default internal font atlas will be created for you.
+- Call `ImGui::SFML::Init` and pass your `sf::Window` + `sf::RenderTarget` or `sf::RenderWindow` there. You can create your font atlas and pass the pointer in Init too, otherwise the default internal font atlas will be created for you. Do this for each window you want to draw ImGui on.
 - For each iteration of a game loop:
     - Poll and process events:
 
         ```cpp
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            ImGui::SFML::ProcessEvent(event);
+        while (const auto event = window.pollEvent()) {
+            ImGui::SFML::ProcessEvent(window, *event);
             ...
         }
         ```
 
-    - Call `ImGui::SFML::Update(window, deltaTime)` where `deltaTime` is `sf::Time`. You can also pass mousePosition and displaySize yourself instead of passing the window.
+    - Call `ImGui::SFML::Update(window, deltaTime)` where `deltaTime` is `sf::Time`. You can also pass `mousePosition` and `displaySize` yourself instead of passing the window.
     - Call ImGui functions (`ImGui::Begin()`, `ImGui::Button()`, etc.)
     - Call `ImGui::EndFrame` after the last `ImGui::End` in your update function, if you update more than once before rendering. (e.g. fixed delta game loops)
     - Call `ImGui::SFML::Render(window)`
 
-- Call `ImGui::SFML::Shutdown()` after `window.close()` has been called
+- Call `ImGui::SFML::Shutdown()` **after** `window.close()` has been called
+    - Use `ImGui::SFML::Shutdown(window)` overload if you have multiple windows. After it's called one of the current windows will become a current "global" window. Call `SetCurrentWindow` to explicitly set which window will be used as default.
 
-**If you only draw ImGui widgets without any SFML stuff, then you'll have to call window.resetGLStates() before rendering anything. You only need to do it once.**
+**If you only draw ImGui widgets without any SFML stuff, then you'll might need to call window.resetGLStates() before rendering anything. You only need to do it once.**
 
 Example code
 ----
 
-See example file [here](examples/main.cpp)
+See example file [here](https://github.com/SFML/imgui-sfml/blob/master/examples/minimal/main.cpp)
 
 ```cpp
 #include "imgui.h"
@@ -113,7 +104,7 @@ See example file [here](examples/main.cpp)
 #include <SFML/Window/Event.hpp>
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(640, 480), "ImGui + SFML = <3");
+    sf::RenderWindow window(sf::VideoMode({640, 480}), "ImGui + SFML = <3");
     window.setFramerateLimit(60);
     ImGui::SFML::Init(window);
 
@@ -122,16 +113,17 @@ int main() {
 
     sf::Clock deltaClock;
     while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            ImGui::SFML::ProcessEvent(event);
+        while (const auto event = window.pollEvent()) {
+            ImGui::SFML::ProcessEvent(window, *event);
 
-            if (event.type == sf::Event::Closed) {
+            if (event->is<sf::Event::Closed>()) {
                 window.close();
             }
         }
 
         ImGui::SFML::Update(window, deltaClock.restart());
+
+        ImGui::ShowDemoWindow();
 
         ImGui::Begin("Hello, world!");
         ImGui::Button("Look at this pretty button");
@@ -177,6 +169,26 @@ ImGui::PopFont();
 
 The first loaded font is treated as the default one and doesn't need to be pushed with `ImGui::PushFont`.
 
+Multiple windows
+----------------
+
+See `examples/multiple_windows` to see how you can create multiple SFML and run different ImGui contexts in them.
+
+- Don't forget to run `ImGui::SFML::Init(const sf::Window&)` for each window you create. Same goes for `ImGui::SFML::Shutdown(const sf::Window&)`
+- Instead of calling `ImGui::SFML::ProcessEvent(sf::Event&)`, you need to call `ImGui::SFML::ProcessEvent(const sf::Window&, const sf::Event&)` overload for each window you create
+- Call `ImGui::SFML::SetCurrentWindow` before calling any `ImGui` functions (e.g. `ImGui::Begin`, `ImGui::Button` etc.)
+- Either call `ImGui::Render(sf::RenderWindow&)` overload for each window or manually do this:
+    ```cpp
+    SetCurrentWindow(window);
+    ... // your custom rendering
+    ImGui::Render();
+
+    SetCurrentWindow(window2);
+    ... // your custom rendering
+    ImGui::Render();
+    ```
+- When closing everything: don't forget to close all windows using SFML's `sf::Window::Close` and then call `ImGui::SFML::Shutdown` to remote all ImGui-SFML window contexts and other data.
+
 SFML related ImGui overloads / new widgets
 ---
 
@@ -215,7 +227,7 @@ sf::Sprite sprite(texture);
 ImGui::Image(sprite); // the texture is displayed properly
 ```
 
-For more notes see [this issue](https://github.com/eliasdaler/imgui-sfml/issues/35).
+For more notes see [this issue](https://github.com/SFML/imgui-sfml/issues/35).
 
 Mouse cursors
 ---
@@ -241,11 +253,11 @@ ImGuiIO& io = ImGui::GetIO();
 io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 ```
 
-Gamepad navigation requires more work, unless you have XInput gamepad, in which case the mapping is automatically set for you. But you can still set it up for your own gamepad easily, just take a look how it's done for the default mapping [here](https://github.com/eliasdaler/imgui-sfml/blob/navigation/imgui-SFML.cpp#L697). And then you need to do this:
+Gamepad navigation requires more work, unless you have XInput gamepad, in which case the mapping is automatically set for you. But you can still set it up for your own gamepad easily, just take a look how it's done for the default mapping [here](https://github.com/SFML/imgui-sfml/blob/navigation/imgui-SFML.cpp#L697). And then you need to do this:
 
 ```cpp
 ImGuiIO& io = ImGui::GetIO();
-io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 ```
 By default, the first active joystick is used for navigation, but you can set joystick id explicitly like this:
 ```cpp
@@ -255,9 +267,16 @@ ImGui::SFML::SetActiveJoystickId(5);
 High DPI screens
 ----
 
-As SFML is not currently DPI aware, your window/gui may show at the incorrect scale. This is particularly noticeable on Apple systems with Retina displays.
+As SFML is not currently DPI aware, your GUI may show at the incorrect scale. This is particularly noticeable on systems with "Retina" / "4K" / "UHD" displays.
 
-To fix this on macOS, you can create an app bundle (as opposed to just the exe) then modify the info.plist so that "High Resolution Capable" is set to "NO"
+To work around this on macOS, you can create an app bundle (as opposed to just the exe) then modify the info.plist so that "High Resolution Capable" is set to "NO".
+
+Another option to help ameliorate this, at least for getting started and for the common ImGui use-case of "developer/debug/building UI", is to explore `FontGlobalScale`:
+
+```cpp
+ImGuiIO& io = ImGui::GetIO();
+io.FontGlobalScale = 2.0; // or any other value hardcoded or loaded from your config logic
+```
 
 License
 ---

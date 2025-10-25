@@ -7,15 +7,15 @@
 
 #ifndef ZYBOOKS
 
+#include <imgui.h>
+#include <imgui-SFML.h>
+
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Color.hpp>
-
-#include <imgui.h>
-#include <imgui-SFML.h>
 
 #include <iostream>
 #include <string>
@@ -36,16 +36,12 @@ int main()
     unsigned char image[512][512];
     char *filename = NULL;
 
-    sf::RenderWindow window(sf::VideoMode(512, 512), "EE 140 Project 1");
+    sf::RenderWindow window(sf::VideoMode(sf::Vector2u(512, 512)), "EE 140 Project 1");
     window.setVerticalSyncEnabled(true);
-    ImGui::SFML::Init(window);
+    assert(ImGui::SFML::Init(window));
 
     // create a texture and sprite for displaying the image
-    sf::Texture texture;
-    if (!texture.create(512, 512))
-    {
-        return -1;
-    }
+    sf::Texture texture(sf::Vector2u(512, 512));
     sf::Sprite sprite(texture); // use a sprite to display the texture
 
     // make sure our image is initially blank
@@ -54,12 +50,14 @@ int main()
     sf::Clock deltaClock;
     while (window.isOpen())
     {
-        sf::Event event;
-        while (window.pollEvent(event))
+        while (const std::optional event = window.pollEvent())
         {
-            ImGui::SFML::ProcessEvent(event);
+            if (event)
+            {
+                ImGui::SFML::ProcessEvent(window, *event);
+            }
 
-            if (event.type == sf::Event::Closed)
+            if (event->is<sf::Event::Closed>())
             {
                 window.close();
             }
@@ -272,7 +270,7 @@ void updateTexture(sf::Texture &texture, unsigned char image[512][512])
         }
     }
 
-    texture.update((const sf::Uint8 *)sfImage);
+    texture.update((const uint8_t *)sfImage);
 }
 
 #else
