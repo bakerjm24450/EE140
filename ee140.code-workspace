@@ -24,6 +24,9 @@
 			"path": "/ucrt64/bin:/usr/bin"
 		},
 		"files.autoSave": "afterDelay",
+		"files.associations": {
+			"iostream": "cpp"
+		},
 	},
 	"extensions": {
 		"recommendations": [

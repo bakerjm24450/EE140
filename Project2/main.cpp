@@ -7,6 +7,9 @@
 
 #ifndef ZYBOOKS
 
+#include <imgui.h>
+#include <imgui-SFML.h>
+
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
@@ -15,12 +18,12 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 
-#include <imgui.h>
-#include <imgui-SFML.h>
-
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <cstdint>
+#include <cstring>
+#include <cassert>
 
 #include <tinyfiledialogs.h>
 
@@ -30,7 +33,7 @@ extern "C"
 }
 
 // forward declarations
-void updateImage(sf::Texture& texture, Image *image);
+void updateImage(sf::Texture &texture, Image *image);
 
 int main()
 {
@@ -39,22 +42,19 @@ int main()
 
     srand(time(NULL));
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "EE 140 Project 2");
+    // SFML 3 style: VideoMode takes a Vector2u
+    sf::RenderWindow window(sf::VideoMode(sf::Vector2u(800, 600)), "EE 140 Project 2");
     window.setVerticalSyncEnabled(true);
-    ImGui::SFML::Init(window);
+    assert(ImGui::SFML::Init(window));
 
-    // create a texture for displaying the image
-    sf::Texture texture;
-    if (!texture.create(800, 600))
-    {
-        return -1;
-    }
+    // create a texture for displaying the image (SFML 3 constructor with size)
+    sf::Texture texture(sf::Vector2u(800, 600));
     sf::Sprite sprite(texture);
 
     // make sure our image is initially blank
     image.width = 800;
     image.height = 600;
-    image.pixels = (Pixel *) malloc(image.width * image.height * sizeof(Pixel));
+    image.pixels = (Pixel *)malloc(image.width * image.height * sizeof(Pixel));
     if (image.pixels == NULL)
     {
         return -1;
@@ -64,12 +64,12 @@ int main()
     sf::Clock deltaClock;
     while (window.isOpen())
     {
-        sf::Event event;
-        while (window.pollEvent(event))
+        // SFML 3: pollEvent() returns std::optional<sf::Event>
+        while (const auto event = window.pollEvent())
         {
-            ImGui::SFML::ProcessEvent(event);
+            ImGui::SFML::ProcessEvent(window, *event);
 
-            if (event.type == sf::Event::Closed)
+            if (event->is<sf::Event::Closed>())
             {
                 window.close();
             }
@@ -145,16 +145,23 @@ int main()
         }
 
         // do we need to resize the window and texture? Image size might have changed
-        sf::Vector2u imageSize(image.width, image.height);
+        sf::Vector2u imageSize(
+            static_cast<unsigned>(image.width),
+            static_cast<unsigned>(image.height));
+
         if (imageSize != window.getSize())
         {
             // resize the window
-            window.create(sf::VideoMode(image.width, image.height), "EE 140 Project 2");
+            window.create(sf::VideoMode(imageSize), "EE 140 Project 2");
 
-            // resize the texture
-            if (!texture.create(image.width, image.height)) {
+            // resize the texture (SFML 3)
+            if (!texture.resize(imageSize))
+            {
                 std::cout << "Didn't resize texture\n";
             }
+
+            // keep sprite bound to the (possibly resized) texture
+            sprite.setTexture(texture, true);
         }
 
         // update the displayed image
@@ -163,23 +170,22 @@ int main()
         window.clear();
 
         // draw the sprite to view image
-        sprite.setTexture(texture, true);
         window.draw(sprite);
-        
+
         // draw the gui stuff
         ImGui::SFML::Render(window);
-        
-        window.display();
 
+        window.display();
     }
 
     ImGui::SFML::Shutdown();
 }
 
-// Update our vertex array for the modified image
-void updateImage(sf::Texture& texture, Image *image)
+// Update our texture for the modified image
+void updateImage(sf::Texture &texture, Image *image)
 {
-    sf::Color *pixels = new sf::Color[image->width*image->height];
+    // allocate an array of sf::Color pixels
+    sf::Color *pixels = new sf::Color[image->width * image->height];
 
     for (int row = 0; row < image->height; row++)
     {
@@ -189,12 +195,15 @@ void updateImage(sf::Texture& texture, Image *image)
             pixels[ndx].r = image->pixels[ndx].r;
             pixels[ndx].g = image->pixels[ndx].g;
             pixels[ndx].b = image->pixels[ndx].b;
-
+            // alpha left at default (opaque)
         }
     }
 
-    // now update the texture
-    texture.update((const sf::Uint8*) pixels, image->width, image->height, 0, 0);
+    // SFML 3: update(texture) from raw RGBA bytes; size is taken from the texture itself
+    texture.update((const uint8_t *)pixels);
+
+    // optional cleanup (the original code leaked this, but it's safe to delete)
+    delete[] pixels;
 }
 
 #else
