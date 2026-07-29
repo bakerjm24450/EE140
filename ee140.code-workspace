@@ -1,43 +1,20 @@
 {
 	"folders": [
 		{
+			"name": "EE140",
 			"path": "."
 		}
 	],
-	"settings": {
-		"terminal.integrated.profiles.windows": {
-			"bash" : {
-				"path" : "c:/msys64/usr/bin/bash.exe",
-				"env" : {
-					"MSYSTEM" : "UCRT64",
-					"CHERE_INVOKING" : "1",
-					"MSYS2_PATH_TYPE" : "inherit"
-				}
-			},
-			"PowerShell" : null,
-			"Git Bash" : null,
-			"Command Prompt" : null,
-			"JavaScript Debug Terminal" : null
-		},
-		"terminal.integrated.defaultProfile.windows": "bash",
-		"terminal.integrated.env.windows": {
-			"path": "/ucrt64/bin:/usr/bin"
-		},
-		"files.autoSave": "afterDelay",
-		"files.associations": {
-			"iostream": "cpp"
-		},
-	},
 	"extensions": {
 		"recommendations": [
 			"ms-vscode.cpptools",
-			"jeff-hykin.better-cpp-syntax",
-			"ms-vscode.cpptools-themes"
+			"ms-vscode.cpptools-themes",
+			"ms-vscode.cmake-tools"
 		],
 		"unwantedRecommendations": [
 			"twxs.cmake",
-			"ms-vscode.cmake-tools",
-			"ms-vscode.cpptools-extension-pack"
+			"ms-vscode.cpptools-extension-pack",
+			"github.copilot-chat"
 		]
 	}
 }

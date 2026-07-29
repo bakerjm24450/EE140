@@ -20,7 +20,7 @@
 #include <iostream>
 #include <string>
 
-#include <tinyfiledialogs.h>
+#include "tinyfiledialogs.h"
 
 extern "C"
 {
@@ -76,7 +76,7 @@ int main()
                 {
                     const char *filetype = "*.pgm";
 
-                    filename = tinyfd_openFileDialog("Open File", "Project1/images/", 1, &filetype, "", 1);
+                    filename = tinyfd_openFileDialog("Open File", "images/", 1, &filetype, "", 1);
 
                     readImage(filename, image);
                 }

@@ -1,0 +1,37 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": {
+        "major": 4,
+        "minor": 4,
+        "patch": 0
+    },
+    "$comment": "CMake presets for VMI EE 140 projects",
+    "configurePresets": [
+        {
+            "name": "mingw-cmake",
+            "displayName": "GCC 16.1.0 x86_64-w64-mingw32 (ucrt64)",
+            "description": "Using compilers: C = c:\\msys64\\ucrt64\\bin\\gcc.exe, CXX = c:\\msys64\\ucrt64\\bin\\g++.exe",
+            "generator": "MinGW Makefiles",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build",
+                "CMAKE_C_COMPILER": "c:/msys64/ucrt64/bin/gcc.exe",
+                "CMAKE_CXX_COMPILER": "c:/msys64/ucrt64/bin/g++.exe",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+                {
+            "name": "macos-cmake",
+            "displayName": "Mac OS Clang",
+            "description": "Using compilers: C = /usr/bin/clang, C++ = /usr/bin/clang++",
+            "generator": "Xcode",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build",
+                "CMAKE_C_COMPILER": "/usr/bin/clang",
+                "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        }
+    ]
+}

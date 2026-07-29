@@ -25,7 +25,7 @@
 #include <cstring>
 #include <cassert>
 
-#include <tinyfiledialogs.h>
+#include "tinyfiledialogs.h"
 
 extern "C"
 {
@@ -88,7 +88,7 @@ int main()
                 {
                     const char *filetype = "*.ppm";
 
-                    filename = tinyfd_openFileDialog("Open File", "Project2/images/", 1, &filetype, "", 1);
+                    filename = tinyfd_openFileDialog("Open File", "images/", 1, &filetype, "", 1);
 
                     readImage(filename, &image);
                 }

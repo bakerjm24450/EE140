@@ -1,42 +1,52 @@
 {
     "env": {
-      "myDefaultIncludePath": [
-        "${workspaceFolder}",
-        "${workspaceFolder}/imgui"
-      ]
+        "myDefaultIncludePath": [
+            "${workspaceFolder}",
+            "${workspaceFolder}/build/_deps/imgui-sfml-src",
+            "${workspaceFolder}/build/_deps/imgui-src"
+        ]
     },
     "configurations": [
-      {
-        "name": "Win32",
-        "intelliSenseMode": "windows-gcc-x64",
-        "includePath": ["${myDefaultIncludePath}"],
-        "compilerPath": "C:\\msys64\\ucrt64\\bin\\g++.exe",
-        "cStandard": "c11",
-        "cppStandard": "c++17",
-        "browse": {
-          "path": ["${workspaceFolder}"],
-          "limitSymbolsToIncludedHeaders": true,
-          "databaseFilename": ""
+        {
+            "name": "Win32",
+            "intelliSenseMode": "windows-gcc-x64",
+            "includePath": [
+                "${myDefaultIncludePath}"
+            ],
+            "compilerPath": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "compilerArgs": [
+                "-fno-ms-extensions"
+            ],
+            "browse": {
+                "path": [
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
+        },
+        {
+            "name": "Mac",
+            "intelliSenseMode": "clang-x64",
+            "includePath": [
+                "${myDefaultIncludePath}"
+            ],
+            "compilerPath": "/usr/bin/g++",
+            "macFrameworkPath": [
+                "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
         }
-      },
-      {
-        "name": "Mac",
-        "intelliSenseMode": "clang-x64",
-        "includePath": ["${myDefaultIncludePath}"],
-        "compilerPath": "/usr/bin/g++",
-        "macFrameworkPath": [
-          "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
-        ],
-        "cStandard": "c11",
-        "cppStandard": "c++17",
-        "browse": {
-          "path": ["${workspaceFolder}"],
-          "limitSymbolsToIncludedHeaders": true,
-          "databaseFilename": ""
-        }
-      }
-
     ],
     "version": 4
-  }
-  
+}
