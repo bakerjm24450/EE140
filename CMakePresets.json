@@ -2,7 +2,7 @@
     "version": 10,
     "cmakeMinimumRequired": {
         "major": 4,
-        "minor": 4,
+        "minor": 0,
         "patch": 0
     },
     "$comment": "CMake presets for VMI EE 140 projects",

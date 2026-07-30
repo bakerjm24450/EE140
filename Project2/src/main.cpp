@@ -40,7 +40,7 @@ int main()
     Image image;
     char *filename = NULL;
 
-    srand(time(NULL));
+    srand((unsigned int) time(NULL));
 
     // SFML 3 style: VideoMode takes a Vector2u
     sf::RenderWindow window(sf::VideoMode(sf::Vector2u(800, 600)), "EE 140 Project 2");
