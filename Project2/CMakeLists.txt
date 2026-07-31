@@ -7,6 +7,9 @@ message(STATUS "Starting Project2 build...")
 add_executable(${PROJECT_NAME})
 add_subdirectory(src)
 
+# compiling for PC/Mac, not zybooks
+target_compile_definitions(${PROJECT_NAME} PUBLIC NO_ZYBOOKS)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE ImGui-SFML::ImGui-SFML)
 
 # Copy images to build directory

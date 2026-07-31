@@ -5,7 +5,7 @@
  * DO NOT MODIFY THIS FILE! THERE IS NOTHING TO CHANGE FOR PROJECT 1!
  */
 
-#ifndef ZYBOOKS
+#ifdef NO_ZYBOOKS
 
 #include <imgui.h>
 #include <imgui-SFML.h>

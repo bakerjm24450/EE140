@@ -17,7 +17,8 @@
             "cStandard": "c11",
             "cppStandard": "c++17",
             "compilerArgs": [
-                "-fno-ms-extensions"
+                "-fno-ms-extensions",
+                "-DNO_ZYBOOKS"
             ],
             "browse": {
                 "path": [
@@ -39,6 +40,9 @@
             ],
             "cStandard": "c11",
             "cppStandard": "c++17",
+            "compilerArgs": [
+                "-DNO_ZYBOOKS"
+            ],
             "browse": {
                 "path": [
                     "${workspaceFolder}"
